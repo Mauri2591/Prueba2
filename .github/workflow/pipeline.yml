@@ -1,0 +1,44 @@
+
+name: SAST Scan CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  semgrep-scan:
+    runs-on: self-hosted
+
+    steps:
+      - name: Datos del proyecto
+        run: |
+          echo "ID Proyecto: 13"
+          echo "Cliente: VENBIERE SRL EN FORMACION"
+          echo "Referencia: 123456"
+
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Generar timestamp Argentina (UTC-3)
+        id: timestamp
+        run: |
+          export TZ="America/Argentina/Buenos_Aires"
+          echo "stamp=$(date +'%Y_%m_%d__%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Ejecutar Semgrep
+        run: |
+          semgrep scan \
+            --config auto \
+            --json > resultados__${stamp}.json
+        env:
+          SEMGREP_REDUCE_FP: "1"
+          SEMGREP_DISABLE_DEEP_SEMANTIC: "1"
+          SEMGREP_EXIT_CODE: "0"
+          stamp: ${{ env.stamp }}
+
+      - name: Guardar resultados como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report-${{ env.stamp }}
+          path: resultados__${{ env.stamp }}.json
