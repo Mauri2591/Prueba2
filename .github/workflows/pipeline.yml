@@ -14,8 +14,9 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      - name: Crear carpeta para resultados
-        run: mkdir -p cliente-VISION_101_SA_proy-5
+      - name: Crear carpeta de cliente
+        run: |
+          mkdir -p cliente-VISION_101_SA-proy-5
 
       - name: Generar timestamp Argentina (UTC-3)
         id: timestamp
@@ -25,7 +26,7 @@ jobs:
 
       - name: Ejecutar Semgrep
         run: |
-          semgrep scan --config auto --json > cliente-VISION_101_SA_proy-5/resultados__${stamp}.json
+          semgrep scan --config auto --json > cliente-VISION_101_SA-proy-5/resultados__${stamp}.json
         env:
           SEMGREP_REDUCE_FP: "1"
           SEMGREP_DISABLE_DEEP_SEMANTIC: "1"
@@ -36,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-report-${{ env.stamp }}
-          path: cliente-VISION_101_SA_proy-5/resultados__${{ env.stamp }}.json
+          path: cliente-VISION_101_SA-proy-5/resultados__${{ env.stamp }}.json
