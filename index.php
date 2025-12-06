@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    Inicio, bienvenidos al indexxxxxxxxxxxxxxxx
+    Inicio, bienvenidos al index
 <br>
 
 
